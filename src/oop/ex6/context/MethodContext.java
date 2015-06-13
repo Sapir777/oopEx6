@@ -7,7 +7,6 @@ import oop.ex6.line.Line;
 import oop.ex6.types.Type;
 
 public class MethodContext extends InnerContext{
-	//TODO: check ends with return
 	List<Type> variableTypes;
 	
 	private boolean hasReturn = false;

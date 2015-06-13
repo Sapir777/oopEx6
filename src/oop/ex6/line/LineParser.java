@@ -188,14 +188,6 @@ public class LineParser {
 		Matcher splitMatcher = METHOD_CALL_SPLIT_PATTERN.matcher(methodVariables);
 		List<String> variables = new ArrayList<>();
 		while(splitMatcher.find()){
-			//TODO: check in context!!!!!
-			/*String variable = splitMatcher.group(REGEX_FIRST_GROUP);
-			if (currentContext.hasVariable(variable)){
-				variables.add(currentContext.getVariable(variable));
-			}
-			else {
-				variables.add(TypeFactory.anonymousType(variable));
-			}*/
 			variables.add(splitMatcher.group(REGEX_FIRST_GROUP));
 		}
 		return new MethodCallLine(methodName, variables);
