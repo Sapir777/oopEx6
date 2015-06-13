@@ -4,7 +4,7 @@ import java.util.List;
 import oop.ex6.line.InvalidOperationException;
 import oop.ex6.line.Line;
 import oop.ex6.types.Type;
-import oop.ex6.types.TypeFactory;
+import oop.ex6.types.TypeFactory.Types;
 
 public class InnerContext extends Context {
 	private Context parent;
@@ -68,12 +68,18 @@ public class InnerContext extends Context {
 					}
 				}
 			}
-			break;
+			return this;
 		case CONDITION:
 			values = line.getVariablesValues();
 			for( String value: values){
-				if(!hasVariable(value) && !TypeFactory.isValid(value)){
+				if(!hasVariable(value) && !Types.BOOLEAN.isValid(value)){
 					throw new InvalidOperationException();
+				}
+				else if (hasLocalVariable(value)){
+					Type variable = getVariable(value);
+					if (!variable.isAssinged() || !Types.BOOLEAN.isValid(variable)){
+						throw new InvalidOperationException();
+					}
 				}
 			}
 			return new ConditionContext(this);
@@ -92,29 +98,11 @@ public class InnerContext extends Context {
 					}
 				}
 			}
-		case TYPE_DECLARTION:
-			List<Type> types = line.getVariableTypes();
-			names = line.getVariablesNames();
-			values = line.getVariablesValues();
-			for(int i=0; i<names.size(); i++){
-				/*if (hasLocalVariable(names.get(i))){
-					throw new NameExistsException();
-				}*/
-				if (!values.get(i).equals("") && !types.get(i).isValid(values.get(i))){
-					throw new InvalidOperationException();
-				}
-				if (values.get(i).equals("") && types.get(i).isFinal()){
-					throw new InvalidOperationException();
-				}
-				setLocalVariable(names.get(i), types.get(i));
-			}
-			break;
+			return this;
 		case RETURN:
-			break;
-		default:
-			throw new InvalidOperationException();
+			return this;
 		}
-		return this;
+		return super.handleLine(line);
 	}
 
 	@Override

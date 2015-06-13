@@ -11,57 +11,57 @@ public class TypeFactory {
 		INT{
 			final public String NAME = "int";
 			Pattern INT_PATTERN = Pattern.compile("-?\\d+");
-			boolean isValid(String name){
+			public boolean isValid(String name){
 				return INT_PATTERN.matcher(name).matches();
 			}
-			boolean isValid(Type type){
+			public boolean isValid(Type type){
 				return type.type == Types.INT;
 			}
 		},
 		DOUBLE {
 			final public String NAME = "double";
 			Pattern DOUBLE_PATTERN = Pattern.compile("-?\\d+\\.?\\d*");
-			boolean isValid(String name){
+			public boolean isValid(String name){
 				return DOUBLE_PATTERN.matcher(name).matches();
 			}
-			boolean isValid(Type type){
+			public boolean isValid(Type type){
 				return type.type == Types.DOUBLE || Types.INT.isValid(type);
 			}
 		},
 		BOOLEAN { 
 			final public String NAME = "bool";
-			boolean isValid(String name){
+			public boolean isValid(String name){
 				return name.trim().equals("true") ||
 						name.trim().equals("false") ||
 						Types.DOUBLE.isValid(name);
 			}
-			boolean isValid(Type type){
+			public boolean isValid(Type type){
 				return type.type == Types.BOOLEAN || Types.DOUBLE.isValid(type);
 			}
 		},
 		STRING { 
 			final public String NAME = "String";
-			boolean isValid(String name){
+			public boolean isValid(String name){
 				return name.trim().startsWith("\"" ) && name.trim().endsWith("\"" );
 			}
-			boolean isValid(Type type){
+			public boolean isValid(Type type){
 				return type.type == Types.STRING;
 			}
 		},
 		CHAR { 
 			final public String NAME = "char";
-			boolean isValid(String name){
+			public boolean isValid(String name){
 				return name.trim().startsWith("\'" ) && name.trim().endsWith("\'" ) &&
 						name.trim().length() == 3;
 			}
-			boolean isValid(Type type){
+			public boolean isValid(Type type){
 				return type.type == Types.CHAR;
 			}
 		};
 		
 		final public String NAME = "";
-		abstract boolean isValid(String name);
-		abstract boolean isValid(Type type);
+		abstract public boolean isValid(String name);
+		abstract public boolean isValid(Type type);
 		static Types parse(String name){
 			Types type = Types.valueOf(name.toUpperCase());
 			if (type.NAME.equals(name)){

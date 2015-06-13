@@ -1,6 +1,7 @@
 package oop.ex6.context;
 
 import java.util.HashMap;
+import java.util.List;
 
 import oop.ex6.line.InvalidOperationException;
 import oop.ex6.line.Line;
@@ -46,9 +47,41 @@ public abstract class Context {
 	 * @return
 	 */
 	public Context getParent() throws InvalidOperationException{
-		throw new InvalidOperationException();
+		return null;
 	}
 	abstract public boolean supportsCondtion();
 	
-	abstract public Context handleLine(Line line) throws NameException, InvalidOperationException, NameExistsException;
+	public Context handleLine(Line line) throws NameException, InvalidOperationException, NameExistsException{
+		switch(line.getLineType()){
+		case TYPE_DECLARTION:
+			List<Type> types = line.getVariableTypes();
+			List<String> names = line.getVariablesNames();
+			List<String> values = line.getVariablesValues();
+			for(int i = 0; i < names.size(); i++){
+				if(hasLocalVariable(names.get(i))){
+					throw new InvalidOperationException();
+				}
+				if(values.get(i).equals("") && types.get(i).isFinal()){
+					throw new InvalidOperationException();
+				}
+				if (!values.get(i).equals("")){
+					if (hasVariable(values.get(i))){
+						Type value = getVariable(values.get(i));
+						if (!value.isAssinged() || !types.get(i).isValid(value)){
+							throw new InvalidOperationException();
+						}
+					} else {
+						if (!types.get(i).isValid(values.get(i))){
+							throw new InvalidOperationException();
+						}
+						
+					}
+					types.get(i).setAssigned();
+				}
+				setLocalVariable(names.get(i), types.get(i));
+			}
+			return this;
+		}
+		throw new InvalidOperationException();
+	}
 }

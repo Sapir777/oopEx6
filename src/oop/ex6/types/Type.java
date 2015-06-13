@@ -9,6 +9,7 @@ public class Type {
 	public Type(boolean isFinal, TypeFactory.Types type){
 		this.mutuable = isFinal;
 		this.type = type;
+		isAssigned = false;
 	}
 		
 	public boolean isValid(String value){
@@ -30,5 +31,10 @@ public class Type {
 	public String getName() {
 		return type.name();
 
+	}
+
+	public boolean isAssinged() {
+		// TODO Auto-generated method stub
+		return isAssigned;
 	}
 }

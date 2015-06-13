@@ -13,6 +13,9 @@ public class MethodLine implements Line {
 	public MethodLine(String name, List<Type> variableType, List<String> variableNames){
 		this.name = name;
 		this.variableType = variableType;
+		for( Type type:variableType){
+			type.setAssigned();
+		}
 		this.variableNames = variableNames;
 	}
 

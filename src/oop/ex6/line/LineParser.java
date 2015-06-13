@@ -19,26 +19,26 @@ import oop.ex6.types.TypeFactory;
 import oop.ex6.types.ValueException;
 
 public class LineParser {
-	final Pattern CONDITION_PATTERN = Pattern.compile("\\s*(?:if|while)\\s*\\(\\s*-?['\"\\.\\w]+\\s*(?:" + 
-													 "[<>]=?|==|!=)\\s*-?['\"\\w\\.]+(?:\\s+(?:\\|\\||&&)" + 
-			                                         "\\s+-?['\"\\w\\.]+\\s*(?:[<>]=?|==|!=)\\s*-?['\"\\w\\.]+)*\\s*" + 
-													 "\\)\\s*\\{");
-	final Pattern VARIABLE_DEFINE_PATTERN = Pattern.compile("\\s*((?:final|))\\s*(\\w+)+\\s+(\\w+" + 
-													     "\\s*(?:=\\s*-?['\"\\w\\.]+|)(?:\\s*,\\s*\\w+\\s*" +
-			                                             "(?:=\\s*-?['\"\\w\\.]+|)|))\\s*;\\s*");
-	final Pattern METHOD_PATTERN = Pattern.compile("\\s*void\\s+([a-zA-Z_]\\w*)\\(((?:final)?\\s*" + 
+	final Pattern CONDITION_PATTERN = Pattern.compile("\\s*(?:if|while)\\s*\\(\\s*(-?" +
+                                                      "[^,\"'\\|&]+\\s*(?:\\s+(?:\\|\\" + 
+													  "||&&)\\s+-?[^,\"'&\\|]+\\s*)*)" + 
+                                                      "\\s*\\)\\s*\\{\\s*");
+	final Pattern VARIABLE_DEFINE_PATTERN = Pattern.compile("\\s*((?:final|))\\s*(\\w+)+\\s+(_*(?:[a-zA-Z]|_[a-zA-Z0-9])\\w*" + 
+													     "\\s*(?:=\\s*[\"']?-?[^,\\\"']*[\"']?|)(?:\\s*,\\s*_*(?:[a-zA-Z]|_[a-zA-Z0-9])\\w*\\s*" +
+			                                             "(?:=\\s*[\"']?-?[^,\\\"']*[\"']?|)|))\\s*;\\s*");
+	final Pattern METHOD_PATTERN = Pattern.compile("\\s*void\\s+([a-zA-Z]\\w*)\\s*\\(\\s*((?:final)?\\s*" + 
 			                                       "\\w+\\s+\\w+\\s*(?:,\\s*(?:final)?\\s*" + 
-												   "\\w+\\s+\\w+)*)?\\)\\s*\\{\\s*");
-	final Pattern METHOD_CALL_PATTERN = Pattern.compile("\\s*\\([a-zA-Z_]\\w*\\)\\s*\\(\\s*(-?['\"\\.\\w]+" + 
-				 								        "\\s*(?:,\\s*-?['\"\\.\\w]+)*\\s*|)\\)\\s*;\\s*");
-	final Pattern VARIABLE_ASSIGNEMT_PATTERN = Pattern.compile("(\\w+)\\s*=\\s*(-?['\"\\.\\w]+)");
+												   "\\w+\\s+\\w+)*)?\\s*\\)\\s*\\{\\s*");
+	final Pattern METHOD_CALL_PATTERN = Pattern.compile("\\s*([a-zA-Z]\\w*)\\s*\\((?:\\s*([\"']?-?[^,\\\"']*[\"']?" + 
+				 								        "\\s*(?:,\\s*[\"']?-?[^,\\\"']*[\"']?)*\\s*|))?\\)\\s*;\\s*");
+	final Pattern VARIABLE_ASSIGNEMT_PATTERN = Pattern.compile("(\\w+)\\s*=\\s*([\"']?-?[^,\\\"']*[\"']?)\\s*;\\s*");
 	final Pattern RETURN_PATTERN = Pattern.compile("\\s*return\\s*;\\s*");
 	
-	final Pattern CONDITION_SPLIT_PATTERN = Pattern.compile("(-?['\"\\.\\w]+)\\s*(?:==|>=)\\s*(-?['\"\\.\\w]+)");
+	final Pattern CONDITION_SPLIT_PATTERN = Pattern.compile("-?[^\\(\\)\\s,\"'\\|&]+");
 	
-	final Pattern VARIABLE_SPLIT_PATTERN = Pattern.compile("(\\w+)\\s*(?:=\\s*(-?['\"\\w\\.]+)|)");
+	final Pattern VARIABLE_SPLIT_PATTERN = Pattern.compile("(\\w+)\\s*(?:=\\s*([\"']?-?[^,\\\"']*[\"']?)|)");
 	final Pattern METHOD_SPLIT_PATTERN = Pattern.compile("(final\\s+|)(\\w+)\\s+(\\w+)");
-	final Pattern METHOD_CALL_SPLIT_PATTERN = Pattern.compile("(-?['\"\\.\\w]+)");
+	final Pattern METHOD_CALL_SPLIT_PATTERN = Pattern.compile("([\"']?-?[^,\\\"']*[\"']?)");
 	
 	final private int REGEX_FIRST_GROUP = 1;
 	final private int REGEX_SECOND_GROUP = 2;
@@ -54,22 +54,34 @@ public class LineParser {
 	
 	public void read() throws IOException, InvalidOperationException, ValueException, NameExistsException, NameException{
 		String line = reader.readLine();
-		while(line != null){
-			Line nextLine = parseLine(line);
-			if (nextLine.getLineType() == LineVariant.METHOD_DECLERATION){
-				currentContext = currentContext.handleLine(nextLine);
+		int level = 0; //keep track on which context we are
+		while(line != null ){
+			if( !line.trim().equals("") && !line.trim().startsWith("//")){
+				Line nextLine = parseLine(line);
+				if (level == 0 && (nextLine.getLineType() == LineVariant.TYPE_DECLARTION || nextLine.getLineType() == LineVariant.METHOD_DECLERATION)){
+					currentContext = currentContext.handleLine(nextLine);
+				}
+				if(nextLine.getLineType() == LineVariant.METHOD_DECLERATION || 
+						nextLine.getLineType() == LineVariant.CONDITION){
+					level++;
+				}
+				else if(nextLine.getLineType() == LineVariant.BRACES){
+					level--;
+				}
 			}
 			line = reader.readLine();
 		}
 		reader.seek(0);
 		line = reader.readLine();
 		while(line != null){
-			Line nextLine = parseLine(line);
-			if (nextLine.getLineType() == LineVariant.METHOD_DECLERATION){
-				currentContext = currentContext.getMethod(nextLine.getName());
-			}
-			else {
-				currentContext = currentContext.handleLine(nextLine);
+			if( !line.trim().equals("") && !line.trim().startsWith("//")){
+				Line nextLine = parseLine(line);
+				if (nextLine.getLineType() == LineVariant.METHOD_DECLERATION){
+					currentContext = currentContext.getMethod(nextLine.getName());
+				}
+				else if(currentContext.getParent() != null || nextLine.getLineType() != LineVariant.TYPE_DECLARTION){
+					currentContext = currentContext.handleLine(nextLine);
+				}
 			}
 			line = reader.readLine();
 		}
@@ -79,7 +91,7 @@ public class LineParser {
 	public Line parseLine(String inputLine) throws InvalidOperationException, ValueException, NameExistsException{
 		Matcher lineMatcher = CONDITION_PATTERN.matcher(inputLine);
 		if(lineMatcher.matches()){
-			return parseConditionLine(inputLine);
+			return parseConditionLine(lineMatcher.group(REGEX_FIRST_GROUP));
 		}
 		
 		lineMatcher = VARIABLE_DEFINE_PATTERN.matcher(inputLine);
@@ -108,6 +120,9 @@ public class LineParser {
 		if(lineMatcher.matches()){
 			String variableName = lineMatcher.group(REGEX_FIRST_GROUP);
 			String variableValue = lineMatcher.group(REGEX_SECOND_GROUP);
+			//variableValue = variableValue.trim();
+			//variableValue = variableValue.substring(0, variableValue.length()-1);
+			int _ = 5;
 			return new AssignmentLine(variableName, variableValue);
 		}
 		
@@ -127,12 +142,12 @@ public class LineParser {
 		Matcher splitMatcher = CONDITION_SPLIT_PATTERN.matcher(inputLine);
 		List<String> values = new ArrayList<>();
 		while(splitMatcher.find()){
-			for( int i = REGEX_FIRST_GROUP; i < splitMatcher.groupCount(); i++){
-				values.add(splitMatcher.group(i));
+			//for( int i = REGEX_FIRST_GROUP; i < splitMatcher.groupCount(); i++){
+			values.add(splitMatcher.group());
 				/*if(!currentContext.hasVariable() && !TypeFactory.isValid(splitMatcher.group(i))){
 					throw new InvalidOperationException();
 				}*/
-			}
+			//}
 		}
 		return new ConditionLine(values);
 	}
@@ -144,8 +159,11 @@ public class LineParser {
 			Type toAdd = TypeFactory.createType(finalModifier, variableType);
 			String variableName = splitVariables.group(REGEX_FIRST_GROUP);
 			String variableValue = splitVariables.group(REGEX_SECOND_GROUP);
-			types.addDecleration(variableName, toAdd);
-			types.addAssignment(variableName, variableValue);
+			if (variableValue == null){
+				variableValue = "";
+			}
+			types.addDecleration(variableName.trim(), toAdd);
+			types.addAssignment(variableName.trim(), variableValue.trim());
 		}
 		return types;
 	}

@@ -19,7 +19,7 @@ public class ConditionLine implements Line {
 
 	@Override
 	public List<String> getVariablesValues() {
-		return new ArrayList<>();
+		return values;
 	}
 
 	@Override
