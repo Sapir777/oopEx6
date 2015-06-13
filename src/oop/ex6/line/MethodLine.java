@@ -37,5 +37,10 @@ public class MethodLine implements Line {
 	public String getName() {
 		return name;
 	}
+	
+	@Override
+	public LineVariant getLineType() {
+		return LineVariant.METHOD_DECLERATION;
+	}
 
 }

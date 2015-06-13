@@ -1,22 +1,16 @@
 package oop.ex6.context;
-
-import java.util.ArrayList;
 import java.util.List;
-
-import com.sun.corba.se.impl.naming.pcosnaming.NameServer;
-import com.sun.org.apache.xpath.internal.operations.VariableSafeAbsRef;
 
 import oop.ex6.line.InvalidOperationException;
 import oop.ex6.line.Line;
 import oop.ex6.types.Type;
 import oop.ex6.types.TypeFactory;
-import oop.ex6.types.TypeFactory.Types;
 
 public class InnerContext extends Context {
 	private Context parent;
-	private boolean hasReturn = false;
 	
 	public InnerContext(Context parent) {
+		super();
 		this.parent = parent;
 	}
 
@@ -52,10 +46,10 @@ public class InnerContext extends Context {
 	@Override
 	public Context handleLine(Line line) throws NameException, InvalidOperationException, NameExistsException {
 		// TODO Auto-generated method stub
-		switch(line.type){
+		switch(line.getLineType()){
 		case BRACES:
 			return parent;
-		case ASSIGNMEND:
+		case ASSIGNMENT:
 			List<String> names = line.getVariablesNames();
 			List<String> values = line.getVariablesValues();
 			for (int i = 0; i < names.size(); i++){

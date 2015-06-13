@@ -1,13 +1,11 @@
 package oop.ex6.line;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import oop.ex6.types.Type;
 
 
 public class AssignmentLine implements Line {
-
 	private String name;
 	private String value;
 	
@@ -38,6 +36,11 @@ public class AssignmentLine implements Line {
 	@Override
 	public String getName() {
 		return name;
+	}
+
+	@Override
+	public LineVariant getLineType() {
+		return LineVariant.ASSIGNMENT;
 	}
 	
 	

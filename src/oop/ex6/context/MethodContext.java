@@ -1,16 +1,10 @@
 package oop.ex6.context;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
-import com.sun.org.apache.xpath.internal.operations.Variable;
-import com.sun.org.apache.xpath.internal.operations.VariableSafeAbsRef;
 
 import oop.ex6.line.InvalidOperationException;
 import oop.ex6.line.Line;
 import oop.ex6.types.Type;
-import sun.security.krb5.internal.crypto.dk.ArcFourCrypto;
 
 public class MethodContext extends InnerContext{
 	//TODO: check ends with return
@@ -33,7 +27,7 @@ public class MethodContext extends InnerContext{
 	@Override
 	public Context handleLine(Line line) throws NameException,
 			InvalidOperationException, NameExistsException {
-		switch(line.type){
+		switch(line.getLineType()){
 		case RETURN:
 			hasReturn = true;
 			break;

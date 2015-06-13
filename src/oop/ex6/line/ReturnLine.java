@@ -6,7 +6,6 @@ import java.util.List;
 import oop.ex6.types.Type;
 
 public class ReturnLine implements Line {
-
 	private final static String RETURN = "return";
 	
 	@Override
@@ -29,4 +28,8 @@ public class ReturnLine implements Line {
 		return RETURN;
 	}
 	
+	@Override
+	public LineVariant getLineType() {
+		return LineVariant.RETURN;
+	}
 }

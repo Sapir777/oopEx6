@@ -6,7 +6,6 @@ import java.util.List;
 import oop.ex6.types.Type;
 
 public class ConditionLine implements Line {
-
 	List<String> values;
 	
 	public ConditionLine(List<String> values) {
@@ -33,4 +32,8 @@ public class ConditionLine implements Line {
 		return "";
 	}
 
+	@Override
+	public LineVariant getLineType() {
+		return LineVariant.CONDITION;
+	}
 }

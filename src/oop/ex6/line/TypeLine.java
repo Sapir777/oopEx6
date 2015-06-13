@@ -1,7 +1,6 @@
 package oop.ex6.line;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -21,6 +20,9 @@ public class TypeLine implements Line {
 	}
 	
 	public void addAssignment(String name, String value){
+		if (value == null){
+			value = "";
+		}
 		assignments.put(name, value);
 	}
 
@@ -45,5 +47,9 @@ public class TypeLine implements Line {
 		return typeList.get(0).getName();
 	}
 	
+	@Override
+	public LineVariant getLineType() {
+		return LineVariant.TYPE_DECLARTION;
+	}
 	
 }

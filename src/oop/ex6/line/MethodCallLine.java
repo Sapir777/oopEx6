@@ -6,7 +6,6 @@ import java.util.List;
 import oop.ex6.types.Type;
 
 public class MethodCallLine implements Line {
-	
 	private List<String> variables;
 	private String name;
 	
@@ -33,5 +32,10 @@ public class MethodCallLine implements Line {
 	@Override
 	public String getName() {
 		return name;
+	}
+	
+	@Override
+	public LineVariant getLineType() {
+		return LineVariant.METHOD_CALL;
 	}
 }

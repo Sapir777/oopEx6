@@ -8,7 +8,8 @@ import oop.ex6.line.InvalidOperationException;
 public class TypeFactory {
 
 	public enum Types{
-		INT {
+		INT{
+			final public String NAME = "int";
 			Pattern INT_PATTERN = Pattern.compile("-?\\d+");
 			boolean isValid(String name){
 				return INT_PATTERN.matcher(name).matches();
@@ -17,7 +18,8 @@ public class TypeFactory {
 				return type.type == Types.INT;
 			}
 		},
-		DOUBLE { 
+		DOUBLE {
+			final public String NAME = "double";
 			Pattern DOUBLE_PATTERN = Pattern.compile("-?\\d+\\.?\\d*");
 			boolean isValid(String name){
 				return DOUBLE_PATTERN.matcher(name).matches();
@@ -27,6 +29,7 @@ public class TypeFactory {
 			}
 		},
 		BOOLEAN { 
+			final public String NAME = "bool";
 			boolean isValid(String name){
 				return name.trim().equals("true") ||
 						name.trim().equals("false") ||
@@ -37,6 +40,7 @@ public class TypeFactory {
 			}
 		},
 		STRING { 
+			final public String NAME = "String";
 			boolean isValid(String name){
 				return name.trim().startsWith("\"" ) && name.trim().endsWith("\"" );
 			}
@@ -45,6 +49,7 @@ public class TypeFactory {
 			}
 		},
 		CHAR { 
+			final public String NAME = "char";
 			boolean isValid(String name){
 				return name.trim().startsWith("\'" ) && name.trim().endsWith("\'" ) &&
 						name.trim().length() == 3;
@@ -54,8 +59,16 @@ public class TypeFactory {
 			}
 		};
 		
+		final public String NAME = "";
 		abstract boolean isValid(String name);
 		abstract boolean isValid(Type type);
+		static Types parse(String name){
+			Types type = Types.valueOf(name.toUpperCase());
+			if (type.NAME.equals(name)){
+				throw new IllegalArgumentException(); 
+			}
+			return type;
+		}
 	}
 	
 	public static Type createType(String modifier, String type) throws InvalidOperationException, ValueException {
@@ -66,7 +79,11 @@ public class TypeFactory {
 				throw new InvalidOperationException();
 			}
 		}
-		return new Type(isFinal, Types.valueOf(type));
+		try {
+			return new Type(isFinal, Types.parse(type));
+		} catch (IllegalArgumentException e){
+			throw new InvalidOperationException();
+		}
 	}
 	
 	public static boolean isValid(String value){

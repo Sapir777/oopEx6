@@ -6,7 +6,6 @@ import java.util.List;
 import oop.ex6.types.Type;
 
 public class BraceLine implements Line {
-	
 	private final static String BRACE = "}";
 
 	@Override
@@ -27,6 +26,11 @@ public class BraceLine implements Line {
 	@Override
 	public String getName() {
 		return BRACE;
+	}
+	
+	@Override
+	public LineVariant getLineType() {
+		return LineVariant.BRACES;
 	}
 
 }

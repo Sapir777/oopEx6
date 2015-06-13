@@ -9,6 +9,11 @@ import oop.ex6.types.Type;
 
 public class GlobalContext extends Context{
 	HashMap<String, MethodContext> methods;
+	
+	public GlobalContext(){
+		super();
+		methods = new HashMap<>();
+	}
 
 	@Override
 	public Type getVariable(String name) throws NameException {
@@ -45,12 +50,13 @@ public class GlobalContext extends Context{
 	public Context handleLine(Line line) throws NameException,
 			InvalidOperationException, NameExistsException {
 		// TODO Auto-generated method stub
-		switch(line.type){
+		switch(line.getLineType()){
 		case METHOD_DECLERATION:
 			if(methods.containsKey(line.getName())){
 				throw new InvalidOperationException();
 			}
 			methods.put(line.getName(), new MethodContext(this, line.getVariablesNames(), line.getVariableTypes()));
+			break;
 		case TYPE_DECLARTION:
 			List<Type> types = line.getVariableTypes();
 			List<String> names = line.getVariablesNames();
@@ -70,6 +76,8 @@ public class GlobalContext extends Context{
 				}
 				setLocalVariable(names.get(i), types.get(i));
 			}
+		default:
+			break;
 			
 		}
 		return this;

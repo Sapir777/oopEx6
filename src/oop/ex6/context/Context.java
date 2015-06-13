@@ -9,6 +9,10 @@ import oop.ex6.types.Type;
 public abstract class Context {
 	private HashMap<String, Type> variables;
 	
+	public Context(){
+		variables = new HashMap<>();
+	}
+	
 	public Type getLocalVariable(String name) throws NameException{
 		if (!hasLocalVariable(name)){
 			throw new NameException();
