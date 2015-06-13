@@ -1,7 +1,9 @@
 package oop.ex6.line;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 import oop.ex6.types.Type;
 
@@ -20,6 +22,27 @@ public class TypeLine implements Line {
 	
 	public void addAssignment(String name, String value){
 		assignments.put(name, value);
+	}
+
+	@Override
+	public List<String> getVariablesNames() {
+		return new ArrayList<String>(declerations.keySet());
+	}
+
+	@Override
+	public List<String> getVariablesValues() {
+		return new ArrayList<String>(assignments.values());
+	}
+
+	@Override
+	public List<Type> getVariableTypes() {
+		return new ArrayList<Type>(declerations.values());
+	}
+
+	@Override
+	public String getName() {
+		List<Type> typeList = new ArrayList<Type>(declerations.values());
+		return typeList.get(0).getName();
 	}
 	
 	

@@ -22,4 +22,13 @@ public class Type {
 	public boolean isFinal(){
 		return mutuable;
 	}
+	
+	public void setAssigned(){
+		isAssigned = true;
+	}
+
+	public String getName() {
+		return type.name();
+
+	}
 }

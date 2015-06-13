@@ -2,6 +2,7 @@ package oop.ex6.line;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,9 +14,11 @@ import com.sun.xml.internal.ws.wsdl.writer.document.Types;
 
 import oop.ex6.context.ConditionContext;
 import oop.ex6.context.Context;
+import oop.ex6.context.GlobalContext;
 import oop.ex6.context.MethodContext;
 import oop.ex6.context.NameException;
 import oop.ex6.context.NameExistsException;
+import oop.ex6.line.Line.LineVariant;
 import oop.ex6.types.Type;
 import oop.ex6.types.TypeFactory;
 import oop.ex6.types.ValueException;
@@ -49,12 +52,31 @@ public class LineParser {
 	final private int REGEX_THIRD_GROUP = 3;
 	
 	private Context currentContext;
+	private BufferedReader reader;
 	
-	public void read(BufferedReader reader) throws IOException, InvalidOperationException, ValueException, NameExistsException, NameException{
+	public LineParser(Reader reader){
+		this.reader = new BufferedReader(reader);
+		currentContext = new GlobalContext();
+	}
+	
+	public void read() throws IOException, InvalidOperationException, ValueException, NameExistsException, NameException{
 		String line = reader.readLine();
 		while(line != null){
 			Line nextLine = parseLine(line);
-			currentContext = currentContext.handleLine(nextLine);
+			if (nextLine.type == LineVariant.METHOD_DECLERATION){
+				currentContext = currentContext.handleLine(nextLine);
+			}
+			line = reader.readLine();
+		}
+		reader.reset();
+		while(line != null){
+			Line nextLine = parseLine(line);
+			if (nextLine.type == LineVariant.METHOD_DECLERATION){
+				currentContext = currentContext.getMethod(nextLine.getName());
+			}
+			else {
+				currentContext = currentContext.handleLine(nextLine);
+			}
 			line = reader.readLine();
 		}
 	}
