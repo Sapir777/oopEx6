@@ -5,11 +5,25 @@ import java.util.List;
 
 import oop.ex6.types.Type;
 
+/**
+ * MethodLine - Line representing deceleration of method
+ * @author sapir, tmrlvi
+ *
+ */
 public class MethodLine implements Line {
+	// The name of the method
 	String name;
+	// The types of the method variables
 	List<Type> variableType;
+	// The names of the method variables
 	List<String> variableNames;
 	
+	/**
+	 * Constructor - creating new method deceleration line
+	 * @param name The name of the method
+	 * @param variableType The types of the method variables
+	 * @param variableNames The names of the method variables
+	 */
 	public MethodLine(String name, List<Type> variableType, List<String> variableNames){
 		this.name = name;
 		this.variableType = variableType;
@@ -21,13 +35,11 @@ public class MethodLine implements Line {
 
 	@Override
 	public List<String> getVariablesNames() {
-		// TODO Auto-generated method stub
 		return variableNames;
 	}
 
 	@Override
 	public List<String> getVariablesValues() {
-		// TODO Auto-generated method stub
 		return new ArrayList<>();
 	}
 

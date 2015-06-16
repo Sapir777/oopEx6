@@ -5,10 +5,21 @@ import java.util.List;
 
 import oop.ex6.types.Type;
 
+/**
+ * MethodCallLine - Line representing method call
+ * @author sapir, tmrlvi
+ */
 public class MethodCallLine implements Line {
+	// The varaiables in the method
 	private List<String> variables;
+	// The name of the method
 	private String name;
 	
+	/**
+	 * Constructor - creates new method
+	 * @param name the name of the method
+	 * @param variables the varaibles to call the method with
+	 */
 	public MethodCallLine(String name, List<String> variables){
 		this.name = name;
 		this.variables = variables;
@@ -16,7 +27,7 @@ public class MethodCallLine implements Line {
 
 	@Override
 	public List<String> getVariablesNames() {
-		return new ArrayList<String>();
+		return new ArrayList<>();
 	}
 
 	@Override

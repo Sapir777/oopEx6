@@ -1,9 +1,10 @@
 package oop.ex6.types;
 
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import oop.ex6.line.InvalidOperationException;
+import oop.ex6.line.InvalidExpressionException;
+import oop.ex6.line.ParsingException;
+import oop.ex6.line.TypeException;
 
 public class TypeFactory {
 
@@ -71,18 +72,18 @@ public class TypeFactory {
 		}
 	}
 	
-	public static Type createType(String modifier, String type) throws InvalidOperationException, ValueException {
+	public static Type createType(String modifier, String type) throws ParsingException {
 		boolean isFinal = false;
 		if( !modifier.equals("")){
 			isFinal = modifier.equals("final");
 			if(!isFinal){
-				throw new InvalidOperationException();
+				throw new InvalidExpressionException();
 			}
 		}
 		try {
 			return new Type(isFinal, Types.parse(type));
 		} catch (IllegalArgumentException e){
-			throw new InvalidOperationException();
+			throw new TypeException();
 		}
 	}
 	

@@ -5,7 +5,12 @@ import java.util.List;
 
 import oop.ex6.types.Type;
 
+/**
+ * BraceLine - Line representing ending braces
+ * @author sapir, tmrlvi
+ */
 public class BraceLine implements Line {
+	// The name of the line
 	private final static String BRACE = "}";
 
 	@Override

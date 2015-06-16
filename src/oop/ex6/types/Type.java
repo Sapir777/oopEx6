@@ -34,7 +34,6 @@ public class Type {
 	}
 
 	public boolean isAssinged() {
-		// TODO Auto-generated method stub
 		return isAssigned;
 	}
 }

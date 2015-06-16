@@ -1,15 +1,21 @@
 package oop.ex6.context;
 
 import java.util.HashMap;
-import java.util.List;
 
-import oop.ex6.line.InvalidOperationException;
 import oop.ex6.line.Line;
 import oop.ex6.types.Type;
 
+/**
+ * GlobalContext - the main context of the sJava file
+ * @author sapir, tmrlvi
+ */
 public class GlobalContext extends Context{
+	// Holds the methods of the file
 	HashMap<String, MethodContext> methods;
-	
+
+	/**
+	 * Constructor - creates a new GlobalContext
+	 */
 	public GlobalContext(){
 		super();
 		methods = new HashMap<>();
@@ -36,11 +42,6 @@ public class GlobalContext extends Context{
 	}
 
 	@Override
-	public boolean supportsCondtion() {
-		return false;
-	}
-
-	@Override
 	public boolean hasVariable(String name) {
 		// TODO Auto-generated method stub
 		return hasLocalVariable(name);
@@ -48,14 +49,15 @@ public class GlobalContext extends Context{
 
 	@Override
 	public Context handleLine(Line line) throws NameException,
-			InvalidOperationException, NameExistsException {
+			InvalidOperationException, NameExistsException, AssignmentException {
 		// TODO Auto-generated method stub
 		switch(line.getLineType()){
 		case METHOD_DECLERATION:
 			if(methods.containsKey(line.getName())){
 				throw new InvalidOperationException();
 			}
-			methods.put(line.getName(), new MethodContext(this, line.getVariablesNames(), line.getVariableTypes()));
+			methods.put(line.getName(), new MethodContext(this, line.getVariablesNames(), 
+					    line.getVariableTypes()));
 			return this;
 
 		default:

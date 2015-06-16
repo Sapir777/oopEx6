@@ -4,11 +4,19 @@ import java.util.List;
 
 import oop.ex6.types.Type;
 
-
+/**
+ * Line representing assignments
+ * @author sapir, tmrlvi
+ */
 public class AssignmentLine implements Line {
-	private String name;
-	private String value;
+	private String name; // The name to assign
+	private String value; // the value to assign to
 	
+	/**
+	 * Constructor
+	 * @param name the name of the variable
+	 * @param value the value of the variable
+	 */
 	public AssignmentLine(String name, String value){
 		this.name = name;
 		this.value = value;

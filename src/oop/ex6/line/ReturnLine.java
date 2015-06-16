@@ -5,7 +5,12 @@ import java.util.List;
 
 import oop.ex6.types.Type;
 
+/**
+ * ReturnLine - Line representing the return.
+ * @author sapir
+ */
 public class ReturnLine implements Line {
+	// The name of the line
 	private final static String RETURN = "return";
 	
 	@Override
